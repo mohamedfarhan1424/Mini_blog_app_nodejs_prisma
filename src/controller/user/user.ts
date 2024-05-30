@@ -10,6 +10,20 @@ export const getUser = async (req: Request, res: Response) => {
       where: {
         id: Number(userId),
       },
+      include: {
+        roles: {
+          select: {
+            id: true,
+            name: true,
+            permissions: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+      },
     });
 
     if (!user) {
