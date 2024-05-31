@@ -7,8 +7,16 @@ interface IUserData {
   email: string;
 }
 
-export const createToken = (userData: IUserData, validity: string) => {
-  const encryptedData = encryptJSON(userData);
+export const createToken = (
+  userData: IUserData,
+  validity: string,
+  isRefreshToken: boolean
+) => {
+  const jwtData = {
+    userData,
+    isRefreshToken: isRefreshToken,
+  };
+  const encryptedData = encryptJSON(jwtData);
 
   return jwt.sign({ encryptedData }, JWT_SECRET, {
     expiresIn: validity,

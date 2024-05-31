@@ -14,7 +14,15 @@ export const validateJwtTokenMiddleware = (
         message: "Unauthorized",
       });
     }
-    req.body.jwtData = validateJwtToken(token);
+    const jwtData = validateJwtToken(token);
+
+    if (jwtData.isRefreshToken) {
+      return res.status(401).json({
+        status: 401,
+        message: "Unauthorized",
+      });
+    }
+    req.body.jwtData = jwtData;
     next();
   } catch (error) {
     console.error(error);

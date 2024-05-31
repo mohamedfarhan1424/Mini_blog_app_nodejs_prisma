@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import prisma from "../../config/dbConnect";
-import { createToken } from "../../common/JwtUtil";
+import { createToken, validateJwtToken } from "../../common/JwtUtil";
 
 import bcrypt from "bcrypt";
 import {
@@ -48,8 +48,8 @@ export const registerUser = async (req: Request, res: Response) => {
       email: user.email,
     };
 
-    const accessToken = createToken(jwtData, ACCESS_TOKEN_EXPIRE);
-    const refreshToken = createToken(jwtData, REFRESH_TOKEN_EXPIRE);
+    const accessToken = createToken(jwtData, ACCESS_TOKEN_EXPIRE, false);
+    const refreshToken = createToken(jwtData, REFRESH_TOKEN_EXPIRE, true);
 
     return res.status(200).json({
       status: 200,
@@ -104,8 +104,8 @@ export const loginUser = async (req: Request, res: Response) => {
       email: user.email,
     };
 
-    const accessToken = createToken(jwtData, ACCESS_TOKEN_EXPIRE);
-    const refreshToken = createToken(jwtData, REFRESH_TOKEN_EXPIRE);
+    const accessToken = createToken(jwtData, ACCESS_TOKEN_EXPIRE, false);
+    const refreshToken = createToken(jwtData, REFRESH_TOKEN_EXPIRE, true);
 
     return res.status(200).json({
       status: 200,
@@ -113,6 +113,40 @@ export const loginUser = async (req: Request, res: Response) => {
       accessToken,
       refreshToken,
       userData: jwtData,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: 500,
+      message: "Something went wrong",
+    });
+  }
+};
+
+export const renewAccessToken = async (req: Request, res: Response) => {
+  try {
+    const { refreshToken }: { refreshToken: string } = req.body;
+
+    const decodedData = await validateJwtToken(refreshToken);
+
+    if (!decodedData.isRefreshToken) {
+      return res.status(400).json({
+        status: 400,
+        message: "Invalid refresh token",
+      });
+    }
+
+    const jwtData = {
+      id: decodedData.id,
+      email: decodedData.email,
+    };
+
+    const accessToken = createToken(jwtData, ACCESS_TOKEN_EXPIRE, false);
+
+    return res.status(200).json({
+      status: 200,
+      message: "Access token renewed successfully",
+      accessToken,
     });
   } catch (error) {
     console.log(error);

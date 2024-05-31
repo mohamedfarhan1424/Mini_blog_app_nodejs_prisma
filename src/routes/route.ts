@@ -1,5 +1,9 @@
 import { Router } from "express";
-import { loginUser, registerUser } from "../controller/auth/auth";
+import {
+  loginUser,
+  registerUser,
+  renewAccessToken,
+} from "../controller/auth/auth";
 import { getUser } from "../controller/user/user";
 import { validateJwtTokenMiddleware } from "../middleware/auth";
 import {
@@ -23,7 +27,7 @@ router.route("/").get((req, res) => {
 // Auth Routes
 router.route("/api/register").post(registerUser);
 router.route("/api/login").post(loginUser);
-//TODO: renew token
+router.route("/api/renew-token").post(renewAccessToken);
 
 // Including middleware for upcoming routes
 router.use("/api/*", validateJwtTokenMiddleware);
