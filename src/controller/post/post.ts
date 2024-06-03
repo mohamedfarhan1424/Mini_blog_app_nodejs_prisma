@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { PostStatus } from "../../types/post";
 import prisma from "../../config/dbConnect";
+import { LikeType } from "../../types/like";
 
 export const createPost = async (req: Request, res: Response) => {
   try {
@@ -134,56 +135,134 @@ export const updatePost = async (req: Request, res: Response) => {
   }
 };
 
-// export const updatePostStatus = async (req: Request, res: Response) => {
+export const updatePostStatus = async (req: Request, res: Response) => {
+  try {
+    const postId = req.params.id;
+    const jwtUserId = req.body.jwtData.id;
+
+    const { status }: { status: PostStatus } = req.body;
+
+    if (!postId || !status) {
+      return res
+        .status(400)
+        .json({ status: 400, message: "Please provide all the fields!" });
+    }
+
+    const post = await prisma.post.findUnique({
+      where: { id: Number(postId) },
+    });
+
+    if (!post) {
+      return res.status(404).json({ status: 404, message: "Post not found!" });
+    }
+
+    if (jwtUserId !== post.user_id) {
+      return res
+        .status(403)
+        .json({ status: 403, message: "You are not authorized to do this!" });
+    }
+
+    switch (status) {
+      case PostStatus.DRAFT:
+      case PostStatus.ON_REVIEW:
+      case PostStatus.ARCHIVED:
+        await prisma.post.update({
+          where: { id: Number(postId) },
+          data: { status },
+        });
+        break;
+      case PostStatus.PUBLISHED:
+        return res.status(400).json({
+          status: 400,
+          message: "You can not publish the post! Please submit for review.",
+        });
+      default:
+        return res
+          .status(400)
+          .json({ status: 400, message: "Invalid status provided!" });
+    }
+
+    return res.status(200).json({
+      status: 200,
+      message: "Post status updated successfully",
+    });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ status: 500, message: "Something went wrong!" });
+  }
+};
+
+export const publishPost = async (req: Request, res: Response) => {
+  try {
+    const postId = req.params.id;
+    const jwtUserId = req.body.jwtData.id;
+
+    if (!postId) {
+      return res
+        .status(400)
+        .json({ status: 400, message: "Please provide all the fields!" });
+    }
+
+    const post = await prisma.post.findUnique({
+      where: { id: Number(postId) },
+    });
+
+    if (!post) {
+      return res.status(404).json({ status: 404, message: "Post not found!" });
+    }
+
+    if (jwtUserId === post.user_id) {
+      return res
+        .status(403)
+        .json({ status: 403, message: "You can not publish your own post!" });
+    }
+
+    if (post.status !== PostStatus.ON_REVIEW) {
+      return res.status(400).json({
+        status: 400,
+        message: "You can not publish the post! Please submit for review.",
+      });
+    }
+
+    await prisma.post.update({
+      where: { id: Number(postId) },
+      data: { status: PostStatus.PUBLISHED },
+    });
+
+    return res.status(200).json({
+      status: 200,
+      message: "Post published successfully",
+    });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ status: 500, message: "Something went wrong!" });
+  }
+};
+
+// export const getPublishedPosts = async (req: Request, res: Response) => {
 //   try {
-//     const postId = req.params.id;
-//     const jwtUserId = req.body.jwtData.id;
-
-//     const { status }: { status: PostStatus } = req.body;
-
-//     if (!postId || !status) {
-//       return res
-//         .status(400)
-//         .json({ status: 400, message: "Please provide all the fields!" });
-//     }
-
-//     const post = await prisma.post.findUnique({
-//       where: { id: Number(postId) },
-//     });
-
-//     if (!post) {
-//       return res.status(404).json({ status: 404, message: "Post not found!" });
-//     }
-
-//     if (jwtUserId !== post.user_id) {
-//       return res
-//         .status(403)
-//         .json({ status: 403, message: "You are not authorized to do this!" });
-//     }
-
-//     if (status === PostStatus.PUBLISHED) {
-//       return res.status(400).json({
-//         status: 400,
-//         message: "You cannot publish a post directly! Please submit for review",
-//       });
-//     }
-
-//     if (status === PostStatus.ARCHIVED) {
-//       return res.status(400).json({
-//         status: 400,
-//         message: "You cannot archive a post directly! Please submit for review",
-//       });
-//     }
-
-//     const updatedPost = await prisma.post.update({
-//       where: { id: Number(postId) },
-//       data: { status },
+//     const page = req.query.page ? Number(req.query.page) : 1;
+//     const limit = req.query.limit ? Number(req.query.limit) : 10;
+//     const offset = (page - 1) * limit;
+//     const posts = await prisma.post.findMany({
+//       where: { status: PostStatus.PUBLISHED },
+//       skip: offset,
+//       take: limit,
+//       include: {
+//         categories: { select: { id: true, name: true } },
+//         likes: { select: { id: true }, where: { type: LikeType.LIKE } },
+//         user: { select: { id: true, name: true } },
+//       },
 //     });
 
 //     return res.status(200).json({
 //       status: 200,
-//       message: "Post status updated successfully",
-//       post: updatedPost,
+//       message: "Published posts fetched successfully",
+//       posts,
 //     });
 //   } catch (err) {
 //     console.log(err);

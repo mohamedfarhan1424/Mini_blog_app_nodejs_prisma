@@ -16,6 +16,12 @@ import { assignRoleToUser } from "../controller/rbac/user";
 import { validatePermission } from "../middleware/permission";
 import { PermissionType } from "../types/permission";
 import { getAllPermissions } from "../controller/rbac/permission";
+import {
+  createCategory,
+  getCategories,
+  getCategoryWithPosts,
+} from "../controller/category/category";
+import { createPost } from "../controller/post/post";
 
 const router = Router();
 
@@ -58,5 +64,12 @@ router
 router
   .route("/api/role/user")
   .post(validatePermission(PermissionType.USER_UPDATE), assignRoleToUser);
+
+// category routes
+router.route("/api/category").get(getCategories).post(createCategory);
+router.route("/api/category/:id").get(getCategoryWithPosts);
+
+//post routes
+router.route("/api/post").post(createPost);
 
 export default router;
