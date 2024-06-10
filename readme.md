@@ -17,10 +17,10 @@
 - `npm install or npm i`
 - Setup the environment variables.
 - Create a .env file in root structure of project and setup below environment variables
-- `DATABASE_URL="postgresql://<DB_USERNAME>:<DB_PASSWORD>@<DB_HOST>:<DB_PORT>/<DATABASE_NAME>?schema=public"`
-- `JWT_SECRET=<YOUR_JWT_SECRET_KEY>`
-- `ACCESS_TOKEN_EXPIRE="30m"` Or any time you want to set
-- `REFRESH_TOKEN_EXPIRE="7d"` Or any time you want to set
+- `DATABASE_URL="postgresql://<DB_USERNAME>:<DB_PASSWORD>@<DB_HOST>:<DB_PORT>/<DATABASE_NAME>?schema=public"` -required
+- `JWT_SECRET=<YOUR_JWT_SECRET_KEY>` -optional
+- `ACCESS_TOKEN_EXPIRE="30m"` Or any time you want to set -optional
+- `REFRESH_TOKEN_EXPIRE="7d"` Or any time you want to set -optional
 - Run `npm start` and your APIs are up and running.
 - You can test the APIs using POSTMAN collection.
 - For start, one user is already seeded with all permissions.
