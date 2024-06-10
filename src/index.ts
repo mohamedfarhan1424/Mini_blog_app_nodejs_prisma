@@ -4,6 +4,8 @@ import router from "./routes/route";
 import { PORT } from "./config/envConstants";
 import { getCachedRSAKeyPair } from "./common/EncryptionDecryption";
 import { seedPermissions } from "./seed/seedPermission";
+import { seedRole } from "./seed/seedRole";
+import { seedUser } from "./seed/seedUser";
 
 const app = express();
 
@@ -15,6 +17,8 @@ getCachedRSAKeyPair();
 
 async function seed() {
   await seedPermissions();
+  await seedRole();
+  await seedUser();
 }
 
 seed()
