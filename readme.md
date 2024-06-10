@@ -25,4 +25,4 @@
 
 [//]: # "Links"
 [DBDIAGRAM]: https://dbdiagram.io/d/Mini-Blog-App-66547e16b65d933879c55815
-[POSTMAN]: https://www.getpostman.com/collections/7
+[POSTMAN]: https://git.geekyants.com/farhan/mini_blog_app_nodejs/-/blob/main/Mini%20Blog%20App%20Node%20js.postman_collection.json?ref_type=heads
