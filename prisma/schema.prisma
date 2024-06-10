@@ -1,0 +1,90 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int       @id @default(autoincrement())
+  name       String
+  email      String    @unique
+  password   String
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  posts      Post[]
+  roles      Role[]    
+  comments   Comment[]
+  likes      Like[]
+}
+
+model Role {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  users       User[]    
+  permissions Permission[]
+}
+
+model Permission {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  roles       Role[]
+}
+
+model Post {
+  id              Int           @id @default(autoincrement())
+  title           String
+  body            String
+  user            User          @relation(fields: [user_id], references: [id])
+  user_id         Int
+  status          String
+  likesCount      Int           @default(0)
+  disLikesCount   Int           @default(0)
+  created_at      DateTime      @default(now())
+  updated_at      DateTime      @updatedAt
+  categories      Category[]
+  comments        Comment[]
+  likes           Like[]
+}
+
+model Category {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  posts       Post[]
+}
+
+model Comment {
+  id          Int       @id @default(autoincrement())
+  content     String
+  post        Post      @relation(fields: [post_id], references: [id])
+  post_id     Int
+  user        User      @relation(fields: [user_id], references: [id])
+  user_id     Int
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+}
+
+model Like {
+  id          Int       @id @default(autoincrement())
+  post        Post      @relation(fields: [post_id], references: [id])
+  post_id     Int
+  user        User      @relation(fields: [user_id], references: [id])
+  user_id     Int
+  type        String
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+}
