@@ -1,0 +1,704 @@
+{
+	"info": {
+		"_postman_id": "f4c65712-c5e9-48ec-a48e-8321a29bdc2f",
+		"name": "Mini Blog App Node js",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "26566007"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"Arpit Kumar\",\n    \"email\": \"farhan1@geekyants.com\",\n    \"password\": \"12345\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/register"
+					},
+					"response": []
+				},
+				{
+					"name": "Renew-token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refreshToken\": \"{{refresh-token}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/renew-token"
+					},
+					"response": []
+				},
+				{
+					"name": "Login user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"farhan@geekyants.com\",\n    \"password\": \"12345\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/login"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "get user",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt}}"
+							}
+						],
+						"url": "{{url}}/api/user/4"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt}}"
+							}
+						],
+						"url": "{{url}}/api/user"
+					},
+					"response": []
+				},
+				{
+					"name": "Update user",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Mohamed Farhan\",\n    \"email\": \"farhan2@geekyants.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/user/4"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "RBAC",
+			"item": [
+				{
+					"name": "Create role with permissions",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"super-admin\",\n    \"permissions\": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/role"
+					},
+					"response": []
+				},
+				{
+					"name": "Assign/ unassign role to user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"roleId\": 4,\n    \"userId\": 4,\n    \"assign\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/role/user"
+					},
+					"response": []
+				},
+				{
+					"name": "Update role with permissions",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"roleId\":4,\n    \"name\": \"super-admin\",\n    \"permissions\": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/role"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all roles",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt}}"
+							}
+						],
+						"url": "{{url}}/api/role"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all permissions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt}}"
+							}
+						],
+						"url": "{{url}}/api/permission"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete role",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt}}"
+							}
+						],
+						"url": "{{url}}/api/role/1"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Post",
+			"item": [
+				{
+					"name": "Create post",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"How to do?\",\n    \"body\": \"data new that\",\n    \"categories\":[1]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/post"
+					},
+					"response": []
+				},
+				{
+					"name": "Update post status",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\":\"on_review\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/post/status/7"
+					},
+					"response": []
+				},
+				{
+					"name": "Publish post",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\":\"on_review\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/post/5"
+					},
+					"response": []
+				},
+				{
+					"name": "Get published post",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\":\"on_review\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/post?page=1&limit=10&sort=asc",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"post"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "search",
+									"value": "data",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "asc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get post by status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/post/status?page=1&limit=10&search=data&sort=asc&status=on_review",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"post",
+								"status"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "search",
+									"value": "data"
+								},
+								{
+									"key": "sort",
+									"value": "asc"
+								},
+								{
+									"key": "status",
+									"value": "on_review"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update post",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"How to do?\",\n    \"body\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbmNyeXB0ZWREYXRhIjp7InR5cGUiOiJCdWZmZXIiLCJkYXRhIjpbMTI0LDEyMiwxODMsOTYsNTUsMjU1LDE1LDEyOCwzMSwxLDI1NCwxMTksMSw0NCwyMzUsMjAxLDE1OCwxMzUsOTcsMjUyLDE4OCwyMTgsMTYsMTcsNjIsMjcsMjA2LDI1NCw0LDE5NywxMjIsMTkxLDE1MywxODAsMjI5LDI0NSwxNDEsMTU1LDE3LDMwLDEyMCwxMzYsMTIwLDIxOCwzNywxNTksMTM3LDMwLDE3NiwxNjIsMjExLDgxLDE3NiwxNjEsMjI1LDEwOSwxNTMsNSw3MywxMywxMjYsMTk3LDgyLDExNywyMDEsMTg2LDEwOSw0MywyMCwyNDcsMTEsMjAsMjI0LDE3LDExLDc1LDIxMiwyNTIsMTk5LDYyLDc3LDUxLDYxLDExMiwxNzUsNjgsMTc3LDU2LDc1LDE1LDE5LDMzLDQ2LDE5NCw1NCw5MCwxMzksNjEsNTMsNjMsMTc5LDEwNSwxNSwxNzEsNDIsNTUsMjU0LDEyNywxMjUsMjAxLDg4LDE1NSw5NywxNzcsMzUsMjE0LDE4MSwxMiwxMzUsMjE2LDk4LDI1Myw0OSw2Niw0Myw2LDU3LDEwMSw5Nyw3OCwyNDIsMTA2LDIwNiwxNzEsMTM5LDMyLDExMiwxMjIsNjUsMTA5LDIyOSwxMDQsMTczLDIyNCwyNDMsODQsOTcsMjIyLDYzLDE3OSw2NiwxNjQsNzQsMjM2LDE2NCwxMDIsMjUsMjUwLDEyLDExMyw4NSwxODUsMjM4LDc3LDExOCwyMjgsMjUwLDYwLDE5NSw5MSwyMjEsMTAwLDc2LDIyNSwxODMsMTcxLDI0Nyw3OCwxMzgsOTEsMjUxLDE1Nyw3NywxMTMsNDEsODQsNDYsMTMxLDYwLDE5MCwyNTUsMjU0LDEzOCwyNDMsMTcyLDQ3LDEwNywxNjEsNzIsMTg0LDIxMywyMTcsMTQxLDI1LDI1MiwxNDcsMjM5LDEwOCwxMDcsOSwxNDcsMTUzLDQ3LDI0NCwxNjYsMjMwLDIwMiwxMjIsMTAwLDIwNSw4MSwzOCwxMTYsNTIsMTIzLDQsMjAzLDE2OSwxNjksMTY1LDgsMTU2LDIwMCw3NCwyMDYsMjA3LDYxLDI1NSwyNDcsMjEzLDc4LDI1LDE0MiwxNjgsMTMxLDM1LDEwMCwyMTgsMTkzLDE4MywyMDcsMTEzLDE2NCwxMjksNDUsMTQzXX0sImlhdCI6MTcxNzE2NjUzNSwiZXhwIjoxNzE3NzcxMzM1fQ._nZ1DFwD9xtHXyI52qgf6wMbZBjjBhBMMewV8YP5vkM\",\n    \"user_id\":3,\n    \"categories\":[1]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/post/2"
+					},
+					"response": []
+				},
+				{
+					"name": "Get user posts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt}}"
+							}
+						],
+						"url": "{{url}}/api/post/user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get post by id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt}}"
+							}
+						],
+						"url": "{{url}}/api/post/3"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete post",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt}}"
+							}
+						],
+						"url": "{{url}}/api/post/1"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Category",
+			"item": [
+				{
+					"name": "Create category",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Tech\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/category"
+					},
+					"response": []
+				},
+				{
+					"name": "Get categories with posts",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Tech\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/category/1"
+					},
+					"response": []
+				},
+				{
+					"name": "get categories",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Tech\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/category"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Likes",
+			"item": [
+				{
+					"name": "likeOrDislike post",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\":\"like\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/post/like/3"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comments",
+			"item": [
+				{
+					"name": "Add comment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"postId\":\"1\",\n    \"comment\":\"Legendary!!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/comment"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete comment",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"postId\":\"1\",\n    \"comment\":\"Nice bro!!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/comment/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Get comments of post",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"postId\":\"1\",\n    \"comment\":\"Nice bro!!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/comment/post/1"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://localhost:3003",
+			"type": "string"
+		},
+		{
+			"key": "jwt",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbmNyeXB0ZWREYXRhIjp7InR5cGUiOiJCdWZmZXIiLCJkYXRhIjpbNzYsMjUyLDE4NCw5OSwyNDksMTUsMTY0LDk5LDE5NCw4OCw2MiwyMjgsODQsMTEzLDE1NCwyMjQsMTQwLDE0NCw1Miw2LDE4MCwxMDcsMjM4LDU1LDEwLDgyLDIwLDI0MywxNTcsMjAwLDE3Myw5NSwyMywxMjAsMjE2LDIxNiwyNDYsMjIxLDIyNSwyMjcsNDEsMjQwLDY1LDU5LDM2LDExNCwxODksMjAwLDE2MSwxODYsNzAsMTYwLDQzLDE0NSw3OCw3OSwyNDIsMjA3LDg3LDE3Miw4Myw3OCw0NywyMSwyLDIxNyw3NCwyMjQsMjEzLDEzMCw0NywyMzYsMjA1LDIyNywxNCwxNTgsNzUsODgsMjE4LDk2LDE5Niw2NCwyMzMsNDcsMTM5LDIyNywxMTksMTIxLDEwNiw1MCwxNzUsMjU1LDE1MSwxODgsNzksMjIzLDEzMywxOSw1LDE2Niw3NywxMTUsMTgsMjU1LDEzNSw5MCwyNTAsMTA5LDExMSwyNTMsMCwyMzcsMjE0LDI0OCwzLDE1NiwxOTQsNzcsODQsMjAxLDIyMSwxOTksMjMwLDE5MiwzMiwxODAsMTMsMTc4LDI0LDE5MCwyMTcsNTAsMTAzLDY3LDExNywyNiwxMjAsODYsMTY3LDEzNCwyNSwyNiwxNDgsMTg3LDEzNiw5LDEyNiwyMzYsMjQxLDU4LDE5OSw1LDIyNywxNDIsNzIsMjUzLDExNSw0MiwxNDQsMTQ4LDQ5LDMsMjM0LDg4LDIyMiw4NCw1MiwxNjIsNDcsMjMsMjI1LDcsMTQ1LDE4Miw3MCwyMzEsMjE4LDM4LDE1MCwxOTcsMjgsNDIsMTgyLDEyMiwzLDE3MSwxODcsNzEsMTAsMTY4LDIsMjA5LDEzOSwxMTQsMiwxMjcsOTYsMjQ3LDY0LDIwMSwyMSw3OCwxMTgsNjYsMzUsMTE3LDEzNCwxMDAsMzcsMTIwLDQyLDYyLDE4MCwyMTAsNTYsMTk5LDE5OSwxMzQsMTcyLDIzMSwyMzUsODYsMTE4LDYwLDEzNCwyMzMsMzMsMTY3LDgxLDE1OSw3MCwxMTMsMTUwLDE1MywyMzYsMzksNDMsNzAsMTQ0LDE2MiwxMDYsMTE4LDEyMiwxMjEsNDMsMTAsMjU0LDI0OCwzOCwxNjQsMTMsMjAxLDE0NiwxNjksMTU0LDExOF19LCJpYXQiOjE3MTgwMjE3ODksImV4cCI6MTcxODAyMzU4OX0.XTMRZ3OQDc3L1NaxJRgfPYNZZZxDKr1bTj5AInIcrcg",
+			"type": "string"
+		},
+		{
+			"key": "refresh-token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbmNyeXB0ZWREYXRhIjp7InR5cGUiOiJCdWZmZXIiLCJkYXRhIjpbMTExLDQ5LDksMTc4LDQ4LDg0LDUsMTU1LDEwMywzMSw1OCwxNzgsMzcsNTksOSwzMiwxNTcsMTUzLDEwOSwyMjksOCwxNzYsMTIsMTI4LDMxLDksMjQzLDUzLDk2LDYsMjQ3LDE1MSwxODIsMTg2LDE5NSwxMzEsMTM5LDE3MiwxOTQsMTkwLDE4LDI1MiwzNiwyNDgsMTQyLDEwMCwyMTMsMTMyLDMyLDI0LDg4LDE4OCwxNjksMTk5LDE4OCwyNDcsMTc0LDIxMyw1OCwyMiwxMjYsNzUsNjcsMTY2LDExNSw1MiwxNTgsNDgsMTg3LDIzOCwxODQsNjYsMTEsMjQsMjEwLDI0NSwyNDUsNTgsMjIxLDksMTA3LDQ5LDI0NSwxNTcsMTY1LDEwMiwyMzcsMTMyLDEwOSwyMzksMTU3LDE3MSwxNDUsMTg0LDI0NCwyMzYsOTcsMTI5LDIxMSwxOTMsMTkwLDU3LDEwLDE3OSwxNTAsMTQ2LDYyLDkyLDIyOSwxMzIsNjIsMTkyLDExNCwyMjEsNiwxMCw4OCwyMzEsMjA0LDE0NCwyNDIsMTExLDEyNiw1MCwxMzEsNDMsMTE0LDE2MywxMzQsNDgsMTMzLDIsMTY3LDExMSw2LDIxMyw2Miw4MCwyMzAsMTEwLDIzNiwxMzMsMjUxLDE4OSwxOTUsMTg2LDE2NiwxODMsMTMwLDEwMiwxOTIsMTE4LDE4Miw4NiwxMDUsMzQsNjEsMjM0LDc1LDE4NiwxMjcsMjksMTAyLDEwNiwyNTMsMTA2LDE2OSwxMjIsMjQwLDE2NywyMzUsNTMsMjE3LDE1NywyMjQsMTA3LDIzOCwyMjksOTksNDQsMjA1LDI1MywxNjEsMTY1LDIzNSw0NiwyMTUsMTExLDEzNSwxMSwxMDcsMTcxLDIzOCwxMzcsMTQ3LDE3NSwxOTQsMjQ5LDEyNSwyMjAsNjcsNjcsMTQ1LDE3NCwyNDUsMTI5LDE0NiwxMjgsMTU1LDI5LDc2LDE5LDIwOSwxMzYsMjMxLDI0OSwyMzcsMTc5LDMyLDI1NSwzNiwyNCwyMTksMTEyLDE4NywyMDEsODgsMjE5LDQyLDE0OCwxMiw3NywyMjMsMTkwLDI0NSwxNCwxNzEsMTczLDI0OCw3LDE4MywxMzUsNjYsNzgsMjUsNjMsMTg4LDE5MCwyNDgsMTU1LDEwNCwyNCwxODAsMTk1LDMsMTFdfSwiaWF0IjoxNzE4MDE3NTA5LCJleHAiOjE3MTg2MjIzMDl9.Pdsm4MYaspF5zHSQZ2OCSJs0qbspBvGRiMTsBsY9IzU",
+			"type": "string"
+		}
+	]
+}
