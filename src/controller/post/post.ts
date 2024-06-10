@@ -8,7 +8,6 @@ export const createPost = async (req: Request, res: Response) => {
     const {
       title,
       body,
-      user_id,
       categories,
     }: {
       title: string;
@@ -17,7 +16,9 @@ export const createPost = async (req: Request, res: Response) => {
       categories: number[];
     } = req.body;
 
-    if (!title || !body || !user_id || !categories) {
+    const user_id = req.body.jwtData.userData.id;
+
+    if (!title || !body || !categories) {
       return res
         .status(400)
         .json({ status: 400, message: "Please provide all the fields!" });
@@ -63,7 +64,7 @@ export const createPost = async (req: Request, res: Response) => {
 export const updatePost = async (req: Request, res: Response) => {
   try {
     const postId = req.params.id;
-    const jwtUserId = req.body.jwtData.id;
+    const jwtUserId = req.body.jwtData.userData.id;
 
     const {
       title,
@@ -138,7 +139,7 @@ export const updatePost = async (req: Request, res: Response) => {
 export const updatePostStatus = async (req: Request, res: Response) => {
   try {
     const postId = req.params.id;
-    const jwtUserId = req.body.jwtData.id;
+    const jwtUserId = req.body.jwtData.userData.id;
 
     const { status }: { status: PostStatus } = req.body;
 
@@ -197,7 +198,7 @@ export const updatePostStatus = async (req: Request, res: Response) => {
 export const publishPost = async (req: Request, res: Response) => {
   try {
     const postId = req.params.id;
-    const jwtUserId = req.body.jwtData.id;
+    const jwtUserId = req.body.jwtData.userData.id;
 
     if (!postId) {
       return res
@@ -243,31 +244,180 @@ export const publishPost = async (req: Request, res: Response) => {
   }
 };
 
-// export const getPublishedPosts = async (req: Request, res: Response) => {
-//   try {
-//     const page = req.query.page ? Number(req.query.page) : 1;
-//     const limit = req.query.limit ? Number(req.query.limit) : 10;
-//     const offset = (page - 1) * limit;
-//     const posts = await prisma.post.findMany({
-//       where: { status: PostStatus.PUBLISHED },
-//       skip: offset,
-//       take: limit,
-//       include: {
-//         categories: { select: { id: true, name: true } },
-//         likes: { select: { id: true }, where: { type: LikeType.LIKE } },
-//         user: { select: { id: true, name: true } },
-//       },
-//     });
+export const getPublishedPosts = async (req: Request, res: Response) => {
+  try {
+    const page = req.query.page ? Number(req.query.page) : 1;
+    const limit = req.query.limit ? Number(req.query.limit) : 10;
+    const offset = (page - 1) * limit;
 
-//     return res.status(200).json({
-//       status: 200,
-//       message: "Published posts fetched successfully",
-//       posts,
-//     });
-//   } catch (err) {
-//     console.log(err);
-//     return res
-//       .status(500)
-//       .json({ status: 500, message: "Something went wrong!" });
-//   }
-// };
+    const search = req.query.search ? String(req.query.search) : "";
+
+    const posts = await prisma.post.findMany({
+      where: {
+        status: PostStatus.PUBLISHED,
+        OR: [{ title: { contains: search } }, { body: { contains: search } }],
+      },
+      orderBy: { created_at: req.query.sort === "asc" ? "asc" : "desc" },
+      skip: offset,
+      take: limit,
+      include: {
+        categories: { select: { id: true, name: true } },
+        user: { select: { id: true, name: true, email: true } },
+      },
+    });
+
+    return res.status(200).json({
+      status: 200,
+      message: "Published posts fetched successfully",
+      posts,
+    });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ status: 500, message: "Something went wrong!" });
+  }
+};
+
+export const getPostById = async (req: Request, res: Response) => {
+  try {
+    const postId = req.params.id;
+    const post = await prisma.post.findUnique({
+      where: { id: Number(postId) },
+      include: {
+        categories: { select: { id: true, name: true } },
+        user: { select: { id: true, name: true, email: true } },
+        likes: {
+          include: { user: { select: { id: true, name: true, email: true } } },
+          where: { type: LikeType.LIKE },
+        },
+        comments: {
+          select: {
+            id: true,
+            content: true,
+            created_at: true,
+            user: { select: { id: true, name: true, email: true } },
+          },
+        },
+      },
+    });
+
+    if (!post) {
+      return res.status(404).json({ status: 404, message: "Post not found!" });
+    }
+
+    return res.status(200).json({
+      status: 200,
+      message: "Post fetched successfully",
+      post,
+    });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ status: 500, message: "Something went wrong!" });
+  }
+};
+
+export const getPostByStatus = async (req: Request, res: Response) => {
+  try {
+    const status: PostStatus = req.query.status as PostStatus;
+    const page = req.query.page ? Number(req.query.page) : 1;
+    const limit = req.query.limit ? Number(req.query.limit) : 10;
+    const offset = (page - 1) * limit;
+
+    const search = req.query.search ? String(req.query.search) : "";
+
+    const posts = await prisma.post.findMany({
+      where: {
+        status: status,
+        OR: [{ title: { contains: search } }, { body: { contains: search } }],
+      },
+      orderBy: { created_at: req.query.sort === "asc" ? "asc" : "desc" },
+      skip: offset,
+      take: limit,
+      include: {
+        categories: { select: { id: true, name: true } },
+        user: { select: { id: true, name: true, email: true } },
+      },
+    });
+
+    return res.status(200).json({
+      status: 200,
+      message: "Posts fetched successfully",
+      posts,
+    });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ status: 500, message: "Something went wrong!" });
+  }
+};
+
+export const getUserPosts = async (req: Request, res: Response) => {
+  try {
+    const userId = req.body.jwtData.userData.id;
+
+    const posts = await prisma.post.findMany({
+      where: { user_id: Number(userId) },
+      include: {
+        categories: { select: { id: true, name: true } },
+        user: { select: { id: true, name: true, email: true } },
+        likes: {
+          include: { user: { select: { id: true, name: true, email: true } } },
+          where: { type: LikeType.LIKE },
+        },
+        comments: {
+          select: {
+            id: true,
+            content: true,
+            created_at: true,
+            user: { select: { id: true, name: true, email: true } },
+          },
+        },
+      },
+    });
+
+    return res.status(200).json({
+      status: 200,
+      message: "User posts fetched successfully",
+      posts,
+    });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ status: 500, message: "Something went wrong!" });
+  }
+};
+
+export const deletePost = async (req: Request, res: Response) => {
+  try {
+    const postId = req.params.id;
+
+    const post = await prisma.post.findUnique({
+      where: { id: Number(postId) },
+    });
+
+    if (!post) {
+      return res.status(404).json({ status: 404, message: "Post not found!" });
+    }
+
+    await prisma.$transaction(async (prisma) => {
+      await prisma.comment.deleteMany({ where: { post_id: Number(postId) } });
+      await prisma.like.deleteMany({ where: { post_id: Number(postId) } });
+      await prisma.post.delete({ where: { id: Number(postId) } });
+    });
+
+    return res.status(200).json({
+      status: 200,
+      message: "Post deleted successfully",
+    });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ status: 500, message: "Something went wrong!" });
+  }
+};

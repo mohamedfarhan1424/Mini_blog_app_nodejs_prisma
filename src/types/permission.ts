@@ -16,4 +16,8 @@ export enum PermissionType {
   USER_VIEW = "user-view",
   USER_UPDATE = "user-update",
   USER_DELETE = "user-delete",
+  CATEGORY_CREATE = "category-create",
+  CATEGORY_VIEW = "category-view",
+  CATEGORY_UPDATE = "category-update",
+  CATEGORY_DELETE = "category-delete",
 }

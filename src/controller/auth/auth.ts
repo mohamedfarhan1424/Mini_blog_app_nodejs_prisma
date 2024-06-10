@@ -137,8 +137,8 @@ export const renewAccessToken = async (req: Request, res: Response) => {
     }
 
     const jwtData = {
-      id: decodedData.id,
-      email: decodedData.email,
+      id: decodedData.userData.id,
+      email: decodedData.userData.email,
     };
 
     const accessToken = createToken(jwtData, ACCESS_TOKEN_EXPIRE, false);

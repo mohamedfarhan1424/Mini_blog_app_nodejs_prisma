@@ -6,7 +6,7 @@ export const validatePermission =
   (permission: PermissionType) =>
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { email } = req.body.jwtData;
+      const { email } = req.body.jwtData.userData;
       const user = await prisma.user.findFirst({
         where: {
           email,

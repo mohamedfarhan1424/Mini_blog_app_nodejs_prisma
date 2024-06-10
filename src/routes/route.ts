@@ -4,7 +4,7 @@ import {
   registerUser,
   renewAccessToken,
 } from "../controller/auth/auth";
-import { getUser } from "../controller/user/user";
+import { getAllUsers, getUser, updateUser } from "../controller/user/user";
 import { validateJwtTokenMiddleware } from "../middleware/auth";
 import {
   createRoleWithPermissions,
@@ -21,7 +21,23 @@ import {
   getCategories,
   getCategoryWithPosts,
 } from "../controller/category/category";
-import { createPost } from "../controller/post/post";
+import {
+  createPost,
+  deletePost,
+  getPostById,
+  getPostByStatus,
+  getPublishedPosts,
+  getUserPosts,
+  publishPost,
+  updatePost,
+  updatePostStatus,
+} from "../controller/post/post";
+import { likeOrDislikePost } from "../controller/like/like";
+import {
+  addComment,
+  deleteComment,
+  getCommentsOfPost,
+} from "../controller/comment/comment";
 
 const router = Router();
 
@@ -40,8 +56,12 @@ router.use("/api/*", validateJwtTokenMiddleware);
 
 // User Routes
 router
+  .route("/api/user")
+  .get(validatePermission(PermissionType.USER_VIEW), getAllUsers);
+router
   .route("/api/user/:userId")
-  .get(validatePermission(PermissionType.USER_VIEW), getUser);
+  .get(validatePermission(PermissionType.USER_VIEW), getUser)
+  .put(validatePermission(PermissionType.USER_UPDATE), updateUser);
 
 // RBAC Routes
 router
@@ -66,10 +86,43 @@ router
   .post(validatePermission(PermissionType.USER_UPDATE), assignRoleToUser);
 
 // category routes
-router.route("/api/category").get(getCategories).post(createCategory);
-router.route("/api/category/:id").get(getCategoryWithPosts);
+router
+  .route("/api/category")
+  .get(validatePermission(PermissionType.CATEGORY_VIEW), getCategories)
+  .post(validatePermission(PermissionType.CATEGORY_CREATE), createCategory);
+router
+  .route("/api/category/:id")
+  .get(validatePermission(PermissionType.CATEGORY_VIEW), getCategoryWithPosts);
 
 //post routes
-router.route("/api/post").post(createPost);
+router
+  .route("/api/post")
+  .post(validatePermission(PermissionType.POST_CREATE), createPost)
+  .get(validatePermission(PermissionType.POST_VIEW), getPublishedPosts);
+router.route("/api/post/user").get(getUserPosts);
+router.route("/api/post/status").get(getPostByStatus);
+router
+  .route("/api/post/:id")
+  .put(validatePermission(PermissionType.POST_UPDATE), updatePost)
+  .post(validatePermission(PermissionType.POST_PUBLISH), publishPost)
+  .get(validatePermission(PermissionType.POST_VIEW), getPostById)
+  .delete(validatePermission(PermissionType.POST_DELETE), deletePost);
+router
+  .route("/api/post/status/:id")
+  .put(validatePermission(PermissionType.POST_UPDATE), updatePostStatus);
+
+// Like or Dislike Post
+router.route("/api/post/like/:id").post(likeOrDislikePost);
+
+// Comment Routes
+router
+  .route("/api/comment")
+  .post(validatePermission(PermissionType.COMMENT_CREATE), addComment);
+router
+  .route("/api/comment/post/:postId")
+  .get(validatePermission(PermissionType.COMMENT_VIEW), getCommentsOfPost);
+router
+  .route("/api/comment/:id")
+  .delete(validatePermission(PermissionType.COMMENT_DELETE), deleteComment);
 
 export default router;
