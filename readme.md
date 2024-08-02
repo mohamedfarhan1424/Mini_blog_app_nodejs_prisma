@@ -10,7 +10,7 @@
 
 - [POSTMAN]
 
-## Running Express Epplication
+## Running Express Application
 
 - Clone the backend application.
 - Enter into application and run the command
